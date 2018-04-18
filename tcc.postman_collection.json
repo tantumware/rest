@@ -1,0 +1,40 @@
+{
+	"info": {
+		"name": "TCC",
+		"_postman_id": "8162c139-2f4f-d9a3-cde2-13dc14bc669f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Calculate Semester",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"periods\": [0, 1, 2],\n\t\"creditMax\": 2,\n\t\"creditMin\": 0,\n\t\"equivalent\": true,\n\t\"subjectsWanted\": [],\n\t\"subjectsNotWanted\": []\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/calculate-semester",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"calculate-semester"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

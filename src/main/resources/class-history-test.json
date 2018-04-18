@@ -1,0 +1,12 @@
+{
+    "semesters": [
+        {
+        	"semester": "2015-1",
+            "subjects": ["INE5666", "INE5661", "INE1111"]
+        },
+        {
+        	"semester": "2015-2",
+        	"subjects": ["INE5656", "INE5156"]
+        }
+    ]
+}
