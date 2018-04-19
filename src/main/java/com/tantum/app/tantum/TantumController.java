@@ -36,6 +36,11 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class TantumController {
 
+	@RequestMapping(path = "test", method = RequestMethod.GET)
+	public String test() {
+		return "This is a Test, REST API is Working";
+	}
+
 	@RequestMapping(path = "/login", method = RequestMethod.GET)
 	public LoginDTO login(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
 		boolean userOk = StringUtils.isNotBlank(username);
