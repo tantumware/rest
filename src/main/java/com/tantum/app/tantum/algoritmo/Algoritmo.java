@@ -103,8 +103,8 @@ public class Algoritmo {
 		model.addClauseTrue(model.boolVar("periodo", validadePeriodo(constraints, subject)));
 		// TODO fazer essa validação e as que ele quer mas removendo elas depois do
 		// primeiro semestre
-		model.addClauseTrue(model.boolVar("disciplinas wanted", validateSubjectsWanted(constraints, subject)));
-		model.addClauseFalse(model.boolVar("disciplias excluidas", validateDisciplinaExcluida(constraints, subject)));
+		// model.addClauseTrue(model.boolVar("disciplinas wanted", validateSubjectsWanted(constraints, subject)));
+		// model.addClauseFalse(model.boolVar("disciplias excluidas", validateDisciplinaExcluida(constraints, subject)));
 		model.addClauseTrue(model.boolVar("requisitos", validateRequisitos(subject, subjectsHistory)));
 
 		return solver;

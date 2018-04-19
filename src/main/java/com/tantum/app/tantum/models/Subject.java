@@ -21,6 +21,8 @@ public class Subject {
 
 	private int fase;
 
+	private String professor;
+
 	private int aulas;
 
 	private boolean obrigatoria;
