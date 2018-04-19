@@ -3,6 +3,8 @@ package com.tantum.app.tantum;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,8 +29,6 @@ import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/v1/")
@@ -56,8 +56,8 @@ public class TantumController {
 
 	@RequestMapping(path = "/calculate-semester", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public SemestersDTO calculateSemester(@RequestBody(required = true) Constraints constraints) {
-		String c = Helper.readJson("course-test.json");
-		String h = Helper.readJson("class-history-test.json");
+		String c = Helper.course_test;
+		String h = Helper.class_history_test;
 
 		Gson g = new Gson();
 		Curso curso = g.fromJson(c, Curso.class);
@@ -76,7 +76,7 @@ public class TantumController {
 
 	@RequestMapping(path = "/schedule/{semester}", method = RequestMethod.GET)
 	public SubjectsDTO schedule(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @PathVariable String semester) {
-		String c = Helper.readJson("course-test.json");
+		String c = Helper.course_test;
 
 		Gson g = new Gson();
 		Semester s = g.fromJson(c, Semester.class);
@@ -89,7 +89,7 @@ public class TantumController {
 
 	@RequestMapping(path = "/subjects", method = RequestMethod.GET) // all subjects
 	public SubjectsDTO disciplinas() {
-		String c = Helper.readJson("course-test.json");
+		String c = Helper.course_test;
 
 		Gson g = new Gson();
 		Semester s = g.fromJson(c, Semester.class);

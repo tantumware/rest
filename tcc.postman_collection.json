@@ -1,8 +1,7 @@
 {
 	"info": {
+		"_postman_id": "5004b61f-eb1d-4edf-866e-d3e3143c6799",
 		"name": "TCC",
-		"_postman_id": "8162c139-2f4f-d9a3-cde2-13dc14bc669f",
-		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -31,8 +30,59 @@
 						"v1",
 						"calculate-semester"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Calculate Semester Heroku",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"periods\": [0, 1, 2],\n\t\"creditMax\": 2,\n\t\"creditMin\": 0,\n\t\"equivalent\": true,\n\t\"subjectsWanted\": [],\n\t\"subjectsNotWanted\": []\n}"
 				},
-				"description": ""
+				"url": {
+					"raw": "https://radiant-wave-75942.herokuapp.com/v1/calculate-semester",
+					"protocol": "https",
+					"host": [
+						"radiant-wave-75942",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"v1",
+						"calculate-semester"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test Heroku",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://radiant-wave-75942.herokuapp.com/v1/test",
+					"protocol": "https",
+					"host": [
+						"radiant-wave-75942",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"v1",
+						"test"
+					]
+				}
 			},
 			"response": []
 		}

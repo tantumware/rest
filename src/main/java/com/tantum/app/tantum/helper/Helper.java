@@ -1,34 +1,9 @@
 package com.tantum.app.tantum.helper;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
-
-import com.tantum.app.tantum.TantumApplication;
-
 public class Helper {
 
-	public static String readJson(String path) {
-		StringBuilder result = new StringBuilder();
+	public static String course_test = "{\"disciplinas\":[{\"nome\":\"Materia Aleatoria 1\",\"codigo\":\"INE5666\",\"fase\":1,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"3.0820-2 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 2\",\"codigo\":\"INE5661\",\"fase\":1,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"3.1620-2 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 3\",\"codigo\":\"INE1111\",\"fase\":1,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"2.1330-4 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 4\",\"codigo\":\"INE5656\",\"fase\":2,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"2.0820-2 / CTC-CTC102\"],\"requisitos\":[\"INE5666\"]},{\"nome\":\"Materia Aleatoria 5\",\"codigo\":\"INE5156\",\"fase\":2,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"2.1010-2 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 6\",\"codigo\":\"INE5612\",\"fase\":2,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"5.1330-3 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 7\",\"codigo\":\"INE5688\",\"fase\":3,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"5.1330-3 / CTC-CTC102\"],\"requisitos\":[\"INE5612\"]},{\"nome\":\"Materia Aleatoria 8\",\"codigo\":\"INE5132\",\"fase\":3,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"2.1010-2 / CTC-CTC102\"],\"requisitos\":[\"INE5656\"]},{\"nome\":\"Materia Aleatoria 9\",\"codigo\":\"INE5133\",\"fase\":4,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"4.1620-2 / CTC-CTC102\"],\"requisitos\":[]},{\"nome\":\"Materia Aleatoria 10\",\"codigo\":\"INE5134\",\"fase\":4,\"professor\":\"Professor aleatório\",\"aulas\":2,\"obrigatoria\":true,\"horarios\":[\"2.1010-2 / CTC-CTC102\"],\"requisitos\":[\"INE5132\",\"INE5661\"]}]}";
 
-		ClassLoader classLoader = TantumApplication.class.getClassLoader();
-		File file = new File(classLoader.getResource(path).getFile());
-		// File file = new File(path);
-
-		try (Scanner scanner = new Scanner(file)) {
-
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				result.append(line).append("\n");
-			}
-
-			scanner.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return result.toString();
-	}
+	public static String class_history_test = "{\"semesters\":[{\"semester\":\"2015-1\",\"subjects\":[\"INE5666\",\"INE5661\",\"INE1111\"]},{\"semester\":\"2015-2\",\"subjects\":[\"INE5656\",\"INE5156\"]}]}";
 
 }
