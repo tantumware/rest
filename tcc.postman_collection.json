@@ -1,13 +1,16 @@
 {
+	"variables": [],
 	"info": {
-		"_postman_id": "5004b61f-eb1d-4edf-866e-d3e3143c6799",
 		"name": "TCC",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "0d8cf38b-9787-bdc5-3911-79ecfc38d450",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Calculate Semester",
 			"request": {
+				"url": "http://localhost:8080/v1/calculate-semester",
 				"method": "POST",
 				"header": [
 					{
@@ -19,24 +22,14 @@
 					"mode": "raw",
 					"raw": "{\n\t\"periods\": [0, 1, 2],\n\t\"creditMax\": 2,\n\t\"creditMin\": 0,\n\t\"equivalent\": true,\n\t\"subjectsWanted\": [],\n\t\"subjectsNotWanted\": []\n}"
 				},
-				"url": {
-					"raw": "http://localhost:8080/v1/calculate-semester",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"v1",
-						"calculate-semester"
-					]
-				}
+				"description": ""
 			},
 			"response": []
 		},
 		{
 			"name": "Calculate Semester Heroku",
 			"request": {
+				"url": "https://radiant-wave-75942.herokuapp.com/v1/calculate-semester",
 				"method": "POST",
 				"header": [
 					{
@@ -48,41 +41,84 @@
 					"mode": "raw",
 					"raw": "{\n\t\"periods\": [0, 1, 2],\n\t\"creditMax\": 2,\n\t\"creditMin\": 0,\n\t\"equivalent\": true,\n\t\"subjectsWanted\": [],\n\t\"subjectsNotWanted\": []\n}"
 				},
-				"url": {
-					"raw": "https://radiant-wave-75942.herokuapp.com/v1/calculate-semester",
-					"protocol": "https",
-					"host": [
-						"radiant-wave-75942",
-						"herokuapp",
-						"com"
-					],
-					"path": [
-						"v1",
-						"calculate-semester"
-					]
-				}
+				"description": ""
 			},
 			"response": []
 		},
 		{
 			"name": "Test Heroku",
 			"request": {
+				"url": "https://radiant-wave-75942.herokuapp.com/v1/test",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://sistemas.homologacao.ufsc.br/oauth2.0/authorize?client_id=oauth&client_secret=segredo&redirect_uri=ufsclogin://setic_oauth_example.ufsc.br&state=E3ZYKC1T6H2yP4z&response_type=code&bypass_approval_prompt=true",
+			"request": {
+				"url": {
+					"raw": "https://sistemas.homologacao.ufsc.br/oauth2.0/authorize?client_id=oauth&client_secret=segredo&redirect_uri=ufsclogin://setic_oauth_example.ufsc.br&state=E3ZYKC1T6H2yP4z&response_type=code&bypass_approval_prompt=true",
+					"protocol": "https",
+					"host": [
+						"sistemas",
+						"homologacao",
+						"ufsc",
+						"br"
+					],
+					"path": [
+						"oauth2.0",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "oauth",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "client_secret",
+							"value": "segredo",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "redirect_uri",
+							"value": "ufsclogin://setic_oauth_example.ufsc.br",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "state",
+							"value": "E3ZYKC1T6H2yP4z",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "response_type",
+							"value": "code",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "bypass_approval_prompt",
+							"value": "true",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
 				"method": "GET",
 				"header": [],
 				"body": {},
-				"url": {
-					"raw": "https://radiant-wave-75942.herokuapp.com/v1/test",
-					"protocol": "https",
-					"host": [
-						"radiant-wave-75942",
-						"herokuapp",
-						"com"
-					],
-					"path": [
-						"v1",
-						"test"
-					]
-				}
+				"description": ""
 			},
 			"response": []
 		}
