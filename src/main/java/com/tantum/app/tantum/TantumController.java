@@ -3,9 +3,7 @@ package com.tantum.app.tantum;
 import java.util.Arrays;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,13 +20,15 @@ import com.tantum.app.tantum.models.Constraints;
 import com.tantum.app.tantum.models.Curso;
 import com.tantum.app.tantum.models.Estatisticas;
 import com.tantum.app.tantum.models.History;
-import com.tantum.app.tantum.models.Login;
 import com.tantum.app.tantum.models.LoginDTO;
 import com.tantum.app.tantum.models.NextSemestersDTO;
 import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
+import com.tantum.app.tantum.services.LoginService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/v1/")
@@ -36,22 +36,17 @@ import com.tantum.app.tantum.models.SubjectsDTO;
 @RestController
 public class TantumController {
 
+	@Autowired
+	private LoginService loginService;
+
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() {
 		return "This is a Test, REST API is Working";
 	}
 
 	@RequestMapping(path = "/login", method = RequestMethod.GET)
-	public LoginDTO login(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
-		boolean userOk = StringUtils.isNotBlank(username);
-		boolean passwordOk = StringUtils.isNotBlank(password);
-
-		Login login = new Login(userOk, passwordOk);
-
-		LoginDTO loginDto = new LoginDTO(userOk && passwordOk, login);
-
-		log.info("Feito login com: " + username + "/" + password);
-		return loginDto;
+	public LoginDTO login(@RequestParam(value = "token") String token) {
+		return new LoginDTO(this.loginService.doAuthenticate(token), token);
 	}
 
 	@RequestMapping(path = "/calculate-semester", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -75,7 +70,8 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "/schedule/{semester}", method = RequestMethod.GET)
-	public SubjectsDTO schedule(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password, @PathVariable String semester) {
+	public SubjectsDTO schedule(@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password, @PathVariable String semester) {
 		String c = Helper.course_test;
 
 		Gson g = new Gson();
@@ -100,7 +96,8 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "/statictics", method = RequestMethod.GET)
-	public Estatisticas estatisticas(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
+	public Estatisticas estatisticas(@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password) {
 		List<String> semesters = Arrays.asList("2015-1", "2015-2", "2016-1", "2016-2", "2017-1", "2017-2");
 		List<Double> semestersIA = Arrays.asList(4.0, 6.0, 7.5, 5.0, 6.0, 7.0);
 		List<Double> courseIA = Arrays.asList(6.0, 4.0, 6.5, 4.0, 5.0, 6.0);
