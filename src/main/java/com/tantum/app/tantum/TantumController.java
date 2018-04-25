@@ -26,7 +26,7 @@ import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
-import com.tantum.app.tantum.services.LoginService;
+import com.tantum.app.tantum.services.SeticService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class TantumController {
 
 	@Autowired
-	private LoginService loginService;
+	private SeticService loginService;
 
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() {
