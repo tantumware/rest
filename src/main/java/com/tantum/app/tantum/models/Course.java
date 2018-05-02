@@ -11,8 +11,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Curso {
+public class Course {
 	
-	private List<Subject> disciplinas;
+	private List<Subject> subjects;
 
 }

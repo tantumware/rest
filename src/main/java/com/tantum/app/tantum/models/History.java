@@ -12,5 +12,5 @@ import lombok.Setter;
 public class History {
 
 	private List<SemesterHistory> semesters;
-	
+
 }

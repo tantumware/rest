@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import com.tantum.app.tantum.algoritmo.Algoritmo;
 import com.tantum.app.tantum.helper.Helper;
 import com.tantum.app.tantum.models.Constraints;
-import com.tantum.app.tantum.models.Curso;
+import com.tantum.app.tantum.models.Course;
 import com.tantum.app.tantum.models.Estatisticas;
 import com.tantum.app.tantum.models.History;
 import com.tantum.app.tantum.models.LoginDTO;
@@ -55,7 +55,7 @@ public class TantumController {
 		String h = Helper.class_history_test;
 
 		Gson g = new Gson();
-		Curso curso = g.fromJson(c, Curso.class);
+		Course curso = g.fromJson(c, Course.class);
 		History history = g.fromJson(h, History.class);
 		SemesterHistory xx = history.getSemesters().stream().reduce((x, y) -> {
 			x.getSubjects().addAll(y.getSubjects());
