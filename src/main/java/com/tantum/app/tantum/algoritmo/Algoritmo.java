@@ -208,12 +208,6 @@ public class Algoritmo {
 		return subjects.containsAll(disciplina.getRequisitos());
 	}
 
-	/**
-	 * Verifica se a constraint da carga horária está ok
-	 *
-	 * @param solver
-	 * @return boolean
-	 */
 	private boolean checkCargaHorariaOk(Solver solver) {
 		return Stream.of(solver.getModel().getVars())
 				.filter(v -> v.getName().equals(credit_max))
@@ -222,13 +216,6 @@ public class Algoritmo {
 				.orElse(false);
 	}
 
-	/**
-	 * Valida as disciplinas que não devem ser pegas
-	 *
-	 * @param settings
-	 * @param disciplina
-	 * @return boolean
-	 */
 	private boolean validateSubjectsNotWanted(Constraints settings, Subject subject) {
 		return settings.getSubjectsNotWanted().contains(subject.getCodigo());
 	}
@@ -243,13 +230,6 @@ public class Algoritmo {
 		return cargaHoraria <= constraints.getCreditMax();
 	}
 
-	/**
-	 * Valida o períoo escolhido pelo aluno (matutino, vespertivo e noturno)
-	 *
-	 * @param settings
-	 * @param disciplina
-	 * @return boolean
-	 */
 	private boolean validadePeriod(Constraints settings, Subject disciplina) {
 		return disciplina.getHorarios()
 				.stream()
@@ -257,13 +237,6 @@ public class Algoritmo {
 				.allMatch(settings.getPeriods()::contains);
 	}
 
-	/**
-	 * Valida o horário das disciplinas para nao haver choque de horários
-	 *
-	 * @param semestre
-	 * @param currentDisciplina
-	 * @return boolean
-	 */
 	private boolean validateTime(List<Subject> currentSubjects, Subject currentDisciplina) {
 		for (Subject s : currentSubjects) {
 			for (String time : s.getHorarios()) {
