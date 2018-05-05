@@ -3,7 +3,6 @@ package com.tantum.app.tantum;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +25,6 @@ import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
-import com.tantum.app.tantum.services.SeticService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,9 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class TantumController {
 
-	@Autowired
-	private SeticService loginService;
-
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() {
 		return "This is a Test, REST API is Working";
@@ -46,7 +41,8 @@ public class TantumController {
 
 	@RequestMapping(path = "/login", method = RequestMethod.GET)
 	public LoginDTO login(@RequestParam(value = "token") String token) {
-		return new LoginDTO(this.loginService.doAuthenticate(token), token);
+		// return new LoginDTO(this.loginService.doAuthenticate(token), token);
+		return new LoginDTO(true, token);
 	}
 
 	@RequestMapping(path = "/calculate-semester", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
