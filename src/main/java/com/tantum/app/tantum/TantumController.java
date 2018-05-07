@@ -110,11 +110,6 @@ public class TantumController {
 		return new Estatisticas(2, semesters, semestersIA, courseIA);
 	}
 
-	@RequestMapping(path = "semestre-atual", method = RequestMethod.GET) // current semester
-	public Semester semestreAtual(@RequestParam(value = "token") String token) {
-		return new Semester();
-	}
-
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	public Result<String> handleMissingToken(MissingServletRequestParameterException ex) {
