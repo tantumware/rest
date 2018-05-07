@@ -36,15 +36,14 @@ import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
 import com.tantum.app.tantum.services.SeticService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequestMapping("/v1/")
 @CrossOrigin
 @RestController
 @ControllerAdvice
 public class TantumController {
-
-	@Autowired
-	private SeticService loginService;
 
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() {
@@ -53,7 +52,8 @@ public class TantumController {
 
 	@RequestMapping(path = "/login", method = RequestMethod.GET)
 	public LoginDTO login(@RequestParam(value = "token", required = true) String token) {
-		return new LoginDTO(this.loginService.doAuthenticate(token), token);
+		// return new LoginDTO(this.loginService.doAuthenticate(token), token);
+		return new LoginDTO(true, token);
 	}
 
 	@RequestMapping(path = "calculate-semester", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
