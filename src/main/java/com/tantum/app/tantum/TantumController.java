@@ -5,7 +5,6 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -34,9 +33,6 @@ import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.SubjectsDTO;
-import com.tantum.app.tantum.services.SeticService;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/v1/")
@@ -50,14 +46,16 @@ public class TantumController {
 		return "This is a Test, REST API is Working";
 	}
 
-	@RequestMapping(path = "/login", method = RequestMethod.GET)
+	@RequestMapping(path = "login", method = RequestMethod.GET)
 	public LoginDTO login(@RequestParam(value = "token", required = true) String token) {
 		// return new LoginDTO(this.loginService.doAuthenticate(token), token);
 		return new LoginDTO(true, token);
 	}
 
 	@RequestMapping(path = "calculate-semester", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public SemestersDTO calculateSemester(@RequestBody(required = true) Constraints constraints) {
+	public SemestersDTO calculateSemester(@RequestParam(value = "token", required = true) String token,
+			@RequestBody(required = true) Constraints constraints) {
+
 		String c = Helper.course_test;
 		String h = Helper.class_history_test;
 
@@ -67,7 +65,7 @@ public class TantumController {
 		SemesterHistory xx = history.getSemesters().stream().reduce((x, y) -> {
 			x.getSubjects().addAll(y.getSubjects());
 			return x;
-		}).get();
+		}).orElse(new SemesterHistory("", Arrays.asList()));
 		Algoritmo a = new Algoritmo(curso);
 		a.rankDisciplinas();
 		NextSemestersDTO result = a.calculateSemesters(constraints, xx.getSubjects());
@@ -77,8 +75,9 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "schedule/{semester}", method = RequestMethod.GET)
-	public SubjectsDTO schedule(@RequestParam(value = "username") String username,
-			@RequestParam(value = "password") String password, @PathVariable String semester) {
+	public SubjectsDTO schedule(@RequestParam(value = "token", required = true) String token,
+			@PathVariable String semester) {
+
 		String c = Helper.course_test;
 
 		Gson g = new Gson();
@@ -103,14 +102,12 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "statictics", method = RequestMethod.GET)
-	public Estatisticas estatisticas(@RequestParam(value = "username") String username,
-			@RequestParam(value = "password") String password) {
+	public Estatisticas estatisticas(@RequestParam(value = "token", required = true) String token) {
 		List<String> semesters = Arrays.asList("2015-1", "2015-2", "2016-1", "2016-2", "2017-1", "2017-2");
 		List<Double> semestersIA = Arrays.asList(4.0, 6.0, 7.5, 5.0, 6.0, 7.0);
 		List<Double> courseIA = Arrays.asList(6.0, 4.0, 6.5, 4.0, 5.0, 6.0);
 
-		Estatisticas e = new Estatisticas(2, semesters, semestersIA, courseIA);
-		return e;
+		return new Estatisticas(2, semesters, semestersIA, courseIA);
 	}
 
 	@RequestMapping(path = "semestre-atual", method = RequestMethod.GET) // current semester
