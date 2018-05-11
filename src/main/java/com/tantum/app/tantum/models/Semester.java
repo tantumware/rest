@@ -14,6 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Semester {
 
-	public List<Subject> disciplinas = new ArrayList<>();
+	public List<Subject> subjects = new ArrayList<>();
 
 }
