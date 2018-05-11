@@ -9,8 +9,8 @@ import static com.tantum.app.tantum.algoritmo.ConstraintsNames.times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,18 +18,19 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.Getter;
-
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.impl.FixedBoolVarImpl;
 
+import com.tantum.app.tantum.helper.Helper;
 import com.tantum.app.tantum.models.Constraints;
 import com.tantum.app.tantum.models.Course;
 import com.tantum.app.tantum.models.NextSemestersDTO;
 import com.tantum.app.tantum.models.Periodo;
 import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.Subject;
+
+import lombok.Getter;
 
 @Getter
 public class Algoritmo {
@@ -40,13 +41,12 @@ public class Algoritmo {
 
 	private Map<Integer, Map<String, List<String>>> course;
 
-	private Map<String, Semester> semesters = new HashMap<>();
+	private Map<String, Semester> semesters = new LinkedHashMap<>();
 
 	private List<Subject> subjectsWantedError;
 
 	public Algoritmo(Course curso) {
-		this.subjects = curso.getSubjects().stream()
-				.collect(Collectors.toMap(Subject::getCodigo, Function.identity()));
+		this.subjects = curso.getSubjects().stream().collect(Collectors.toMap(Subject::getCodigo, Function.identity()));
 		// recebe a lista de disciplinas do curso e monta do map
 		this.course = new HashMap<>();
 
@@ -105,18 +105,18 @@ public class Algoritmo {
 		Model model = new Model();
 		Solver solver = model.getSolver();
 
-		model.addClauseTrue(model.boolVar(credit_max, this.validateClassHourLoad(constraints, currentSubjects, subject)));
-		model.addClauseTrue(model.boolVar(times, this.validateTime(currentSubjects, subject)));
-		model.addClauseTrue(model.boolVar(period, this.validadePeriod(constraints, subject)));
-		model.addClauseTrue(model.boolVar(subjects_wanted, this.validateSubjectsWanted(constraints, subject)));
-		model.addClauseFalse(model.boolVar(subjects_not_wanted, this.validateSubjectsNotWanted(constraints, subject)));
-		model.addClauseTrue(model.boolVar(requisites, this.validateRequisites(subject, subjectsHistory)));
+		model.addClauseTrue(model.boolVar(credit_max, validateClassHourLoad(constraints, currentSubjects, subject)));
+		model.addClauseTrue(model.boolVar(times, validateTime(currentSubjects, subject)));
+		model.addClauseTrue(model.boolVar(period, validadePeriod(constraints, subject)));
+		model.addClauseTrue(model.boolVar(subjects_wanted, validateSubjectsWanted(constraints, subject)));
+		model.addClauseTrue(model.boolVar(subjects_not_wanted, validateSubjectsNotWanted(constraints, subject)));
+		model.addClauseTrue(model.boolVar(requisites, validateRequisites(subject, subjectsHistory)));
 
 		return solver;
 	}
 
 	public NextSemestersDTO calculateSemesters(Constraints constraints, List<String> subjectsHistory) {
-		List<String> rankDisciplinas = this.getSubjectsByRank();
+		List<String> rankDisciplinas = getSubjectsByRank();
 		rankDisciplinas.removeAll(subjectsHistory);
 		List<String> newSubjectsHistory = new ArrayList<>(subjectsHistory);
 		List<Subject> subjectsSemester = null;
@@ -125,27 +125,28 @@ public class Algoritmo {
 		while (!rankDisciplinas.isEmpty()) {
 			i++;
 			if (this.semesters.isEmpty()) {
-				subjectsSemester = this.calculateFirstSemester(constraints, newSubjectsHistory, rankDisciplinas);
-
-				// clear subjects wanted and not wanted cuz its only for the next semester
-				constraints.setSubjectsWanted(Arrays.asList());
-				constraints.setSubjectsNotWanted(Arrays.asList());
+				subjectsSemester = calculateFirstSemester(constraints, newSubjectsHistory, rankDisciplinas);
 			} else {
-				subjectsSemester = this.calculateSemester(constraints, newSubjectsHistory, new ArrayList<>(), rankDisciplinas);
+				subjectsSemester = calculateSemester(constraints, newSubjectsHistory, new ArrayList<>(), rankDisciplinas);
 			}
 
 			if (subjectsSemester.isEmpty()) {
 				break;
 			}
 
-			this.semesters.put(this.getSemesterYear(i), new Semester(subjectsSemester));
+			this.semesters.put(Helper.semesters.get(i), new Semester(subjectsSemester));
 
 			subjectsSemester.stream().map(Subject::getCodigo).forEach(codigo -> {
 				rankDisciplinas.remove(codigo);
 				newSubjectsHistory.add(codigo);
 			});
 		}
-		return new NextSemestersDTO(this.semesters, this.subjectsWantedError, new ArrayList<>(), rankDisciplinas.stream().map(this.subjects::get).collect(Collectors.toList()));
+		return new NextSemestersDTO(
+				this.semesters,
+				this.subjectsWantedError, new ArrayList<>(),
+				rankDisciplinas.stream()
+						.map(this.subjects::get)
+						.collect(Collectors.toList()));
 	}
 
 	private List<Subject> calculateFirstSemester(Constraints constraints, List<String> subjectsHistory, List<String> subjectsRemaining) {
@@ -155,7 +156,7 @@ public class Algoritmo {
 
 		for (String s : constraints.getSubjectsWanted()) {
 			Subject subject = this.subjects.get(s);
-			Solver solver = this.applyConstraints(constraints, subjectsHistory, subject, currentSubjects);
+			Solver solver = applyConstraints(constraints, subjectsHistory, subject, currentSubjects);
 			boolean solve = solver.solve();
 			if (solve) {
 				currentSubjects.add(subject);
@@ -167,7 +168,11 @@ public class Algoritmo {
 		constraints.getSubjectsNotWanted().forEach(newSubjectsRemaining::remove);
 		currentSubjects.stream().map(Subject::getCodigo).forEach(newSubjectsRemaining::remove);
 
-		return this.calculateSemester(constraints, subjectsHistory, currentSubjects, newSubjectsRemaining);
+		// clear subjects wanted and not wanted
+		constraints.setSubjectsWanted(Arrays.asList());
+		constraints.setSubjectsNotWanted(Arrays.asList());
+
+		return calculateSemester(constraints, subjectsHistory, currentSubjects, newSubjectsRemaining);
 	}
 
 	private List<Subject> calculateSemester(Constraints constraints, List<String> subjectsHistory, List<Subject> currentSubjects, List<String> subjectsRemaining) {
@@ -175,33 +180,18 @@ public class Algoritmo {
 
 		for (String d : subjectsRemaining) {
 			Subject disciplina = this.subjects.get(d);
-			Solver solver = this.applyConstraints(constraints, subjectsHistory, disciplina, newCurrentSubjects);
+			Solver solver = applyConstraints(constraints, subjectsHistory, disciplina, newCurrentSubjects);
 			boolean solve = solver.solve();
 			if (solve) {
 				newCurrentSubjects.add(disciplina);
 			} else {
-				if (!this.checkCargaHorariaOk(solver)) {
+				if (!checkCargaHorariaOk(solver)) {
 					break;
 				}
 			}
 		}
 
 		return newCurrentSubjects;
-	}
-
-	// TODO arrumar essa coisa aqui
-	private String getSemesterYear(int index) {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		int month = Calendar.getInstance().get(Calendar.MONTH);
-
-		int n = Math.round(index / 2);
-
-		year = year + n;
-		if (month >= 7) {
-			return String.valueOf(year) + "-2";
-		}
-
-		return String.valueOf(year) + "-1";
 	}
 
 	private boolean validateRequisites(Subject disciplina, List<String> subjects) {
@@ -212,16 +202,23 @@ public class Algoritmo {
 		return Stream.of(solver.getModel().getVars())
 				.filter(v -> v.getName().equals(credit_max))
 				.map(v -> ((FixedBoolVarImpl) v).getValue() == 1 ? true : false)
-				.findAny()
-				.orElse(false);
+				.findAny().orElse(false);
 	}
 
-	private boolean validateSubjectsNotWanted(Constraints settings, Subject subject) {
-		return settings.getSubjectsNotWanted().contains(subject.getCodigo());
+	private boolean validateSubjectsNotWanted(Constraints constraints, Subject subject) {
+		if (constraints.getSubjectsNotWanted().isEmpty()) {
+			return true;
+		} else {
+			return !constraints.getSubjectsNotWanted().contains(subject.getCodigo());
+		}
 	}
 
 	private boolean validateSubjectsWanted(Constraints constraints, Subject subject) {
-		return constraints.getSubjectsWanted().contains(subject.getCodigo());
+		if (constraints.getSubjectsWanted().isEmpty()) {
+			return true;
+		} else {
+			return constraints.getSubjectsWanted().contains(subject.getCodigo());
+		}
 	}
 
 	private boolean validateClassHourLoad(Constraints constraints, List<Subject> currentSubjects, Subject subject) {
