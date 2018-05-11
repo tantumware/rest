@@ -3,6 +3,9 @@ package com.tantum.app.tantum;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,8 +36,6 @@ import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
 import com.tantum.app.tantum.models.Subject;
 import com.tantum.app.tantum.models.SubjectsDTO;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/v1/")
@@ -108,11 +109,22 @@ public class TantumController {
 	@RequestMapping(path = "subjects", method = RequestMethod.GET) // all subjects
 	public SubjectsDTO disciplinas() {
 		String c = Helper.course_test;
+		String h = Helper.class_history_test;
 
 		Gson g = new Gson();
-		Semester s = g.fromJson(c, Semester.class);
+		Course curso = g.fromJson(c, Course.class);
+		History history = g.fromJson(h, History.class);
 
-		SubjectsDTO disciplinasDTO = new SubjectsDTO(true, s);
+		List<Subject> subjects = curso.getSubjects().stream().filter(s -> {
+			for (SemesterHistory sh : history.getSemesters()) {
+				if (sh.getSubjects().contains(s.getCodigo())) {
+					return true;
+				}
+			}
+			return false;
+		}).collect(Collectors.toList());
+
+		SubjectsDTO disciplinasDTO = new SubjectsDTO(true, new Semester(subjects));
 		log.info("subjects");
 		return disciplinasDTO;
 	}
