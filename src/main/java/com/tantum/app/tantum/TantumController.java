@@ -118,10 +118,10 @@ public class TantumController {
 		List<Subject> subjects = curso.getSubjects().stream().filter(s -> {
 			for (SemesterHistory sh : history.getSemesters()) {
 				if (sh.getSubjects().contains(s.getCodigo())) {
-					return true;
+					return false;
 				}
 			}
-			return false;
+			return true;
 		}).collect(Collectors.toList());
 
 		SubjectsDTO disciplinasDTO = new SubjectsDTO(true, new Semester(subjects));
