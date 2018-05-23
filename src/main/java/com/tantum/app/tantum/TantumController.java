@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.tantum.app.tantum.algoritmo.Algoritmo;
+import com.tantum.app.tantum.algorithm.Algorithm;
 import com.tantum.app.tantum.helper.Helper;
 import com.tantum.app.tantum.models.Constraints;
 import com.tantum.app.tantum.models.Course;
-import com.tantum.app.tantum.models.Estatisticas;
+import com.tantum.app.tantum.models.Statistics;
 import com.tantum.app.tantum.models.History;
 import com.tantum.app.tantum.models.LoginDTO;
 import com.tantum.app.tantum.models.NextSemestersDTO;
@@ -69,7 +69,7 @@ public class TantumController {
 			x.getSubjects().addAll(y.getSubjects());
 			return x;
 		}).orElse(new SemesterHistory("", Arrays.asList()));
-		Algoritmo a = new Algoritmo(curso);
+		Algorithm a = new Algorithm(curso);
 		a.rankDisciplinas();
 		NextSemestersDTO result = a.calculateSemesters(constraints, xx.getSubjects());
 
@@ -130,12 +130,12 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "statictics", method = RequestMethod.GET)
-	public Estatisticas estatisticas(@RequestParam(value = "token", required = true) String token) {
+	public Statistics estatisticas(@RequestParam(value = "token", required = true) String token) {
 		List<String> semesters = Arrays.asList("2015-1", "2015-2", "2016-1", "2016-2", "2017-1", "2017-2");
 		List<Double> semestersIA = Arrays.asList(4.0, 6.0, 7.5, 5.0, 6.0, 7.0);
 		List<Double> courseIA = Arrays.asList(6.0, 4.0, 6.5, 4.0, 5.0, 6.0);
 
-		return new Estatisticas(2, semesters, semestersIA, courseIA);
+		return new Statistics(2, semesters, semestersIA, courseIA);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST) // 400

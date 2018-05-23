@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Constraints {
 
-	private List<Periodo> periods;
+	private List<Period> periods;
 
 	private int creditMax;
 

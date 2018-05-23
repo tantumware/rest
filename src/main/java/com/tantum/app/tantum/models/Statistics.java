@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Estatisticas {
+public class Statistics {
 
-	private int semestresRestantes;
+	private int semestersRemaining;
 
 	private List<String> semesters;
 

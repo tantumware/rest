@@ -1,11 +1,11 @@
-package com.tantum.app.tantum.algoritmo;
+package com.tantum.app.tantum.algorithm;
 
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.credit_max;
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.period;
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.requisites;
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.subjects_not_wanted;
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.subjects_wanted;
-import static com.tantum.app.tantum.algoritmo.ConstraintsNames.times;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.credit_max;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.period;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.requisites;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.subjects_not_wanted;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.subjects_wanted;
+import static com.tantum.app.tantum.algorithm.ConstraintsNames.times;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,14 +26,14 @@ import com.tantum.app.tantum.helper.Helper;
 import com.tantum.app.tantum.models.Constraints;
 import com.tantum.app.tantum.models.Course;
 import com.tantum.app.tantum.models.NextSemestersDTO;
-import com.tantum.app.tantum.models.Periodo;
+import com.tantum.app.tantum.models.Period;
 import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.Subject;
 
 import lombok.Getter;
 
 @Getter
-public class Algoritmo {
+public class Algorithm {
 
 	private Map<String, Subject> subjects;
 
@@ -45,7 +45,7 @@ public class Algoritmo {
 
 	private List<Subject> subjectsWantedError;
 
-	public Algoritmo(Course curso) {
+	public Algorithm(Course curso) {
 		this.subjects = curso.getSubjects().stream().collect(Collectors.toMap(Subject::getCodigo, Function.identity()));
 		// recebe a lista de disciplinas do curso e monta do map
 		this.course = new HashMap<>();
@@ -230,7 +230,7 @@ public class Algoritmo {
 	private boolean validadePeriod(Constraints settings, Subject disciplina) {
 		return disciplina.getHorarios()
 				.stream()
-				.map(Periodo::getPeriodoByHorario)
+				.map(Period::getPeriodByTime)
 				.allMatch(settings.getPeriods()::contains);
 	}
 

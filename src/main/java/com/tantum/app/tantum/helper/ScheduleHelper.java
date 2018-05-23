@@ -13,9 +13,7 @@ public class ScheduleHelper {
 	}
 
 	/**
-	 * Recebe um horario no formato d.hhmm-n
-	 *
-	 * onde n é a quantidade de aulas
+	 * classTime in format: d.hhmm-n
 	 *
 	 * @param horario
 	 * @return

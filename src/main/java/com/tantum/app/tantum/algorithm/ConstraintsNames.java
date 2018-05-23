@@ -1,4 +1,4 @@
-package com.tantum.app.tantum.algoritmo;
+package com.tantum.app.tantum.algorithm;
 
 public class ConstraintsNames {
 
