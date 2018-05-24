@@ -3,6 +3,7 @@ package com.tantum.app.tantum;
 import static com.tantum.app.tantum.models.Period.AFTERNOON;
 import static com.tantum.app.tantum.models.Period.MORNING;
 import static com.tantum.app.tantum.models.Period.NIGHT;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -28,7 +29,7 @@ import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.Subject;
 
 @RunWith(JUnit4.class)
-public class AlgorirmoTest {
+public class AlgorithmTest {
 
 	private static Constraints constraints = new Constraints();
 
@@ -209,6 +210,65 @@ public class AlgorirmoTest {
 		assertFalse(result.getSubjectsNotSelected().isEmpty());
 		assertTrue(result.getSubjectsNotWantedError().isEmpty());
 		assertTrue(result.getSubjectsWantedError().isEmpty());
+	}
+
+	@Test
+	public void testSubjectsWanted() {
+		// given
+		constraints.setSubjectsWanted(Arrays.asList("INE5612"));
+
+		// when
+		NextSemestersDTO result = alg.calculateSemesters(constraints, semesterHistory.getSubjects());
+
+		// then
+		assertFalse(result.getNextSemesters().isEmpty());
+		assertTrue(result.getSubjectsNotSelected().isEmpty());
+		assertTrue(result.getSubjectsNotWantedError().isEmpty());
+		assertTrue(result.getSubjectsWantedError().isEmpty());
+		assertTrue(hasSubject(result, "INE5612"));
+	}
+
+	@Test
+	public void testSubjectsWantedError() {
+		// given
+		constraints.setSubjectsWanted(Arrays.asList("INE5134"));
+
+		// when
+		NextSemestersDTO result = alg.calculateSemesters(constraints, semesterHistory.getSubjects());
+
+		// then
+		assertFalse(result.getNextSemesters().isEmpty());
+		assertTrue(result.getSubjectsNotSelected().isEmpty());
+		assertTrue(result.getSubjectsNotWantedError().isEmpty());
+		assertFalse(result.getSubjectsWantedError().isEmpty());
+		assertEquals("INE5134", result.getSubjectsWantedError().get(0).getCodigo());
+		assertFalse(hasSubject(result, "INE5134"));
+	}
+
+	@Test
+	public void testSubjectsNotWanted() {
+		// given
+		constraints.setSubjectsNotWanted(Arrays.asList("INE5612"));
+
+		// when
+		NextSemestersDTO result = alg.calculateSemesters(constraints, semesterHistory.getSubjects());
+
+		// then
+		assertFalse(result.getNextSemesters().isEmpty());
+		assertTrue(result.getSubjectsNotSelected().isEmpty());
+		assertTrue(result.getSubjectsNotWantedError().isEmpty());
+		assertTrue(result.getSubjectsWantedError().isEmpty());
+		assertFalse(hasSubject(result, "INE5612"));
+	}
+
+	private static boolean hasSubject(NextSemestersDTO result, String code) {
+		return result.getNextSemesters()
+				.get(Helper.semesters.get(1))
+				.getSubjects()
+				.stream()
+				.filter(s -> s.getCodigo().equals(code))
+				.findAny()
+				.isPresent();
 	}
 
 }

@@ -26,7 +26,6 @@ import com.tantum.app.tantum.algorithm.Algorithm;
 import com.tantum.app.tantum.helper.Helper;
 import com.tantum.app.tantum.models.Constraints;
 import com.tantum.app.tantum.models.Course;
-import com.tantum.app.tantum.models.Statistics;
 import com.tantum.app.tantum.models.History;
 import com.tantum.app.tantum.models.LoginDTO;
 import com.tantum.app.tantum.models.NextSemestersDTO;
@@ -34,6 +33,7 @@ import com.tantum.app.tantum.models.Result;
 import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.SemesterHistory;
 import com.tantum.app.tantum.models.SemestersDTO;
+import com.tantum.app.tantum.models.Statistics;
 import com.tantum.app.tantum.models.Subject;
 import com.tantum.app.tantum.models.SubjectsDTO;
 
@@ -106,8 +106,8 @@ public class TantumController {
 		return disciplinasDTO;
 	}
 
-	@RequestMapping(path = "subjects", method = RequestMethod.GET) // all subjects
-	public SubjectsDTO disciplinas() {
+	@RequestMapping(path = "subjects", method = RequestMethod.GET)
+	public SubjectsDTO subjects(@RequestParam(value = "token", required = true) String token) {
 		String c = Helper.course_test;
 		String h = Helper.class_history_test;
 
@@ -130,7 +130,7 @@ public class TantumController {
 	}
 
 	@RequestMapping(path = "statictics", method = RequestMethod.GET)
-	public Statistics estatisticas(@RequestParam(value = "token", required = true) String token) {
+	public Statistics statictics(@RequestParam(value = "token", required = true) String token) {
 		List<String> semesters = Arrays.asList("2015-1", "2015-2", "2016-1", "2016-2", "2017-1", "2017-2");
 		List<Double> semestersIA = Arrays.asList(4.0, 6.0, 7.5, 5.0, 6.0, 7.0);
 		List<Double> courseIA = Arrays.asList(6.0, 4.0, 6.5, 4.0, 5.0, 6.0);

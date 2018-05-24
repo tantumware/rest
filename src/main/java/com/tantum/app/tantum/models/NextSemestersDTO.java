@@ -1,7 +1,7 @@
 package com.tantum.app.tantum.models;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NextSemestersDTO {
 
-	private Map<String, Semester> nextSemesters;
+	private LinkedHashMap<String, Semester> nextSemesters;
 
 	private List<Subject> subjectsWantedError;
 

@@ -18,6 +18,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.Getter;
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.impl.FixedBoolVarImpl;
@@ -30,8 +32,6 @@ import com.tantum.app.tantum.models.Period;
 import com.tantum.app.tantum.models.Semester;
 import com.tantum.app.tantum.models.Subject;
 
-import lombok.Getter;
-
 @Getter
 public class Algorithm {
 
@@ -41,7 +41,7 @@ public class Algorithm {
 
 	private Map<Integer, Map<String, List<String>>> course;
 
-	private Map<String, Semester> semesters = new LinkedHashMap<>();
+	private LinkedHashMap<String, Semester> semesters = new LinkedHashMap<>();
 
 	private List<Subject> subjectsWantedError;
 
@@ -105,18 +105,18 @@ public class Algorithm {
 		Model model = new Model();
 		Solver solver = model.getSolver();
 
-		model.addClauseTrue(model.boolVar(credit_max, validateClassHourLoad(constraints, currentSubjects, subject)));
-		model.addClauseTrue(model.boolVar(times, validateTime(currentSubjects, subject)));
-		model.addClauseTrue(model.boolVar(period, validadePeriod(constraints, subject)));
-		model.addClauseTrue(model.boolVar(subjects_wanted, validateSubjectsWanted(constraints, subject)));
-		model.addClauseTrue(model.boolVar(subjects_not_wanted, validateSubjectsNotWanted(constraints, subject)));
-		model.addClauseTrue(model.boolVar(requisites, validateRequisites(subject, subjectsHistory)));
+		model.addClauseTrue(model.boolVar(credit_max, this.validateClassHourLoad(constraints, currentSubjects, subject)));
+		model.addClauseTrue(model.boolVar(times, this.validateTime(currentSubjects, subject)));
+		model.addClauseTrue(model.boolVar(period, this.validadePeriod(constraints, subject)));
+		model.addClauseTrue(model.boolVar(subjects_wanted, this.validateSubjectsWanted(constraints, subject)));
+		model.addClauseTrue(model.boolVar(subjects_not_wanted, this.validateSubjectsNotWanted(constraints, subject)));
+		model.addClauseTrue(model.boolVar(requisites, this.validateRequisites(subject, subjectsHistory)));
 
 		return solver;
 	}
 
 	public NextSemestersDTO calculateSemesters(Constraints constraints, List<String> subjectsHistory) {
-		List<String> rankDisciplinas = getSubjectsByRank();
+		List<String> rankDisciplinas = this.getSubjectsByRank();
 		rankDisciplinas.removeAll(subjectsHistory);
 		List<String> newSubjectsHistory = new ArrayList<>(subjectsHistory);
 		List<Subject> subjectsSemester = null;
@@ -125,9 +125,9 @@ public class Algorithm {
 		while (!rankDisciplinas.isEmpty()) {
 			i++;
 			if (this.semesters.isEmpty()) {
-				subjectsSemester = calculateFirstSemester(constraints, newSubjectsHistory, rankDisciplinas);
+				subjectsSemester = this.calculateFirstSemester(constraints, newSubjectsHistory, rankDisciplinas);
 			} else {
-				subjectsSemester = calculateSemester(constraints, newSubjectsHistory, new ArrayList<>(), rankDisciplinas);
+				subjectsSemester = this.calculateSemester(constraints, newSubjectsHistory, new ArrayList<>(), rankDisciplinas);
 			}
 
 			if (subjectsSemester.isEmpty()) {
@@ -156,7 +156,7 @@ public class Algorithm {
 
 		for (String s : constraints.getSubjectsWanted()) {
 			Subject subject = this.subjects.get(s);
-			Solver solver = applyConstraints(constraints, subjectsHistory, subject, currentSubjects);
+			Solver solver = this.applyConstraints(constraints, subjectsHistory, subject, currentSubjects);
 			boolean solve = solver.solve();
 			if (solve) {
 				currentSubjects.add(subject);
@@ -172,7 +172,7 @@ public class Algorithm {
 		constraints.setSubjectsWanted(Arrays.asList());
 		constraints.setSubjectsNotWanted(Arrays.asList());
 
-		return calculateSemester(constraints, subjectsHistory, currentSubjects, newSubjectsRemaining);
+		return this.calculateSemester(constraints, subjectsHistory, currentSubjects, newSubjectsRemaining);
 	}
 
 	private List<Subject> calculateSemester(Constraints constraints, List<String> subjectsHistory, List<Subject> currentSubjects, List<String> subjectsRemaining) {
@@ -180,12 +180,12 @@ public class Algorithm {
 
 		for (String d : subjectsRemaining) {
 			Subject disciplina = this.subjects.get(d);
-			Solver solver = applyConstraints(constraints, subjectsHistory, disciplina, newCurrentSubjects);
+			Solver solver = this.applyConstraints(constraints, subjectsHistory, disciplina, newCurrentSubjects);
 			boolean solve = solver.solve();
 			if (solve) {
 				newCurrentSubjects.add(disciplina);
 			} else {
-				if (!checkCargaHorariaOk(solver)) {
+				if (!this.checkCargaHorariaOk(solver)) {
 					break;
 				}
 			}
